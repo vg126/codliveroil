@@ -1,0 +1,434 @@
+# Chub.ai Unified OpenAPI Specification
+# Consolidated spec for OpenAI Actions. All requests require the CH-API-KEY header.
+
+openapi: 3.1.0
+info:
+  title: Chub.ai Unified API
+  version: 1.0.1
+  description: |
+    A consolidated specification that exposes all publicly-documented Chub.ai
+    endpoints for characters, presets, personas and RAG lore.  
+    All calls are made to **https://inference.chub.ai** and require the
+    `CH-API-KEY` header. Some routes also accept an `Authorization` bearer token.
+
+servers:
+  - url: https://inference.chub.ai
+    description: Chub.ai main API server
+
+paths:
+  /api/core/characters:
+    post:
+      operationId: createCharacter
+      summary: Create a new character on Chub.ai
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Character'
+      responses:
+        '200':
+          description: Character created successfully
+
+  /presets:
+    post:
+      operationId: createPreset
+      summary: Create a new preset
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, definition]
+              properties:
+                name:
+                  type: string
+                creator_notes:
+                  type: string
+                tagline:
+                  type: string
+                is_nsfl:
+                  type: boolean
+                is_nsfw:
+                  type: boolean
+                is_public:
+                  type: boolean
+                is_unlisted:
+                  type: boolean
+                is_anonymous:
+                  type: boolean
+                version:
+                  type: string
+                version_notes:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                ratings_disabled:
+                  type: boolean
+                parent_id:
+                  type: integer
+                  nullable: true
+                definition:
+                  type: object
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Preset created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+                  errors:
+                    type: string
+                  path_with_namespace:
+                    type: string
+                  id:
+                    type: integer
+                  commit_id:
+                    type: string
+                  version:
+                    type: string
+                  id_v2:
+                    type: string
+
+  /presets/active/{preset_id}:
+    post:
+      operationId: setActivePreset
+      summary: Set the active preset
+      security:
+        - chubApiKey: []
+      parameters:
+        - name: preset_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the preset to make active
+      responses:
+        '200':
+          description: Active preset set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  full_path:
+                    type: string
+                  definition:
+                    type: object
+                  creator_name:
+                    type: string
+                  is_owner:
+                    type: boolean
+                  is_active:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  description:
+                    type: string
+                  extensions_full:
+                    type: object
+                  extensions:
+                    type: array
+                    items: {}
+
+  /presets/active:
+    post:
+      operationId: getActivePreset
+      summary: Get the user’s current active preset
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                include_definition:
+                  type: boolean
+                  description: If true, include full preset definition
+      responses:
+        '200':
+          description: Active preset details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  full_path:
+                    type: string
+                  definition:
+                    type: object
+                  creator_name:
+                    type: string
+                  is_owner:
+                    type: boolean
+                  is_active:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  description:
+                    type: string
+                  extensions_full:
+                    type: object
+                  extensions:
+                    type: array
+                    items: {}
+
+  /lore:
+    post:
+      operationId: queryLore
+      summary: Run a RAG lore query
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                owners:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional array of owners (lorebooks, characters, etc.)
+                text:
+                  type: string
+                  description: The question to ask the lore system
+                cutoff:
+                  type: number
+                  description: Relevance threshold (e.g. 0.8)
+      responses:
+        '200':
+          description: Relevant lore excerpts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  texts:
+                    type: array
+                    items:
+                      type: string
+
+  /lore/item:
+    post:
+      operationId: uploadLoreItem
+      summary: Upload an unstructured lore item
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, owner_id, owner_type]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                owner_id:
+                  type: string
+                owner_type:
+                  type: string
+                  description: "'character', 'chat', 'lorebook', or 'scenario'"
+                owner_sub_id:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Lore item uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  location:
+                    type: string
+                  owner_id:
+                    type: string
+                  owner_type:
+                    type: string
+                  owner_sub_id:
+                    type: string
+                  enabled:
+                    type: boolean
+                  id:
+                    type: integer
+
+  /api/personas:
+    get:
+      operationId: getPersonas
+      summary: List the user’s personas
+      security:
+        - chubApiKey: []
+      responses:
+        '200':
+          description: List of personas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  personas:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Persona'
+    post:
+      operationId: createPersona
+      summary: Create a new persona
+      security:
+        - chubApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaInput'
+      responses:
+        '200':
+          description: Persona created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Persona'
+
+  /api/personas/{persona_id}:
+    post:
+      operationId: updatePersona
+      summary: Update an existing persona
+      security:
+        - chubApiKey: []
+      parameters:
+        - name: persona_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaInput'
+      responses:
+        '200':
+          description: Persona updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+
+components:
+  securitySchemes:
+    chubApiKey:
+      type: apiKey
+      in: header
+      name: CH-API-KEY
+
+  schemas:
+    Character:
+      type: object
+      required:
+        [name, description, personality, first_message, example_dialogs, scenario]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        personality:
+          type: string
+        first_message:
+          type: string
+        example_dialogs:
+          type: string
+        scenario:
+          type: string
+        tagline:
+          type: string
+        creator:
+          type: string
+        character_version:
+          type: string
+        system_prompt:
+          type: string
+        creator_notes:
+          type: string
+        post_history_instructions:
+          type: string
+        alternate_greetings:
+          type: array
+          items:
+            type: string
+
+    Persona:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        name:
+          type: string
+        persona_name:
+          type: string
+        chat_profile:
+          type: string
+        avatar:
+          type: string
+        nsfw_image:
+          type: boolean
+        is_default:
+          type: boolean
+        lorebook_id:
+          type: integer
+        lorebook_path:
+          type: string
+
+    PersonaInput:
+      type: object
+      properties:
+        name:
+          type: string
+        persona_name:
+          type: string
+        chat_profile:
+          type: string
+        avatar:
+          type: string
+          format: uri
+        nsfw_image:
+          type: boolean
+        is_default:
+          type: boolean
+        lorebook_id:
+          type: integer
+        describe:
+          type: boolean
