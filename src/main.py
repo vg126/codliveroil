@@ -21,12 +21,12 @@ from src.verifier import verify_match
 from src.refiner import refine_prompt
 
 TARGET_DESCRIPTION = (
-    "Professional man with sharp jawline, bright blue eyes, short brown hair,"
-    " slight smile, clean shaven."
+    "Petite Indian woman with semi-sharp features, expressive dark eyes, "
+    "long black hair, subtle smile, warm complexion."
 )
 INITIAL_PROMPT = (
-    "photorealistic portrait of a professional man with sharp angular jawline,"
-    " bright blue eyes, short brown hair, subtle smile, clean shaven face, studio lighting"
+    "photorealistic portrait of a petite Indian woman with semi-sharp features, "
+    "expressive dark eyes, long black hair, subtle smile, warm complexion, studio lighting"
 )
 THRESHOLD = config.CONVERGENCE_THRESHOLD
 MAX_ITERATIONS = config.MAX_ITERATIONS

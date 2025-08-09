@@ -14,7 +14,7 @@ BASE_URL = config.BASE_URL
 HEADERS = {"Authorization": f"Bearer {config.STAGE_TOKEN}"}
 
 POLLING_INTERVAL = config.POLLING_INTERVAL
-MAX_POLL_ATTEMPTS = 60
+MAX_POLL_ATTEMPTS = int(config.POLL_TIMEOUT / config.POLLING_INTERVAL)  # Calculate attempts from total timeout
 REQUEST_TIMEOUT = config.REQUEST_TIMEOUT
 
 
