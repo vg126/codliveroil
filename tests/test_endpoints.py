@@ -3,14 +3,15 @@ import sys
 import time
 import requests
 
-# ensure project root on path
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# Add the project root to Python path for config import
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
 
 import config
 
 BASE_URL = config.BASE_URL
 HEADERS = {"Authorization": f"Bearer {config.STAGE_TOKEN}"}
-REQUEST_TIMEOUT = 30
+REQUEST_TIMEOUT = config.REQUEST_TIMEOUT
 
 
 def test_image_generation_endpoint():
@@ -44,3 +45,22 @@ def test_chat_completion_endpoint():
     data = response.json()
     assert "choices" in data
     print(f"/v1/chat/completions responded in {duration:.2f}s")
+
+
+if __name__ == "__main__":
+    print("Testing Chub.ai API endpoints...")
+    print(f"Base URL: {BASE_URL}")
+    
+    try:
+        test_chat_completion_endpoint()
+        print("✅ Chat completions endpoint working")
+    except Exception as e:
+        print(f"❌ Chat completions endpoint failed: {e}")
+    
+    try:
+        test_image_generation_endpoint()
+        print("✅ Image generation endpoint working")
+    except Exception as e:
+        print(f"❌ Image generation endpoint failed: {e}")
+    
+    print("Endpoint testing complete!")

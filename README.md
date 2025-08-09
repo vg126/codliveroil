@@ -7,8 +7,8 @@ Build and execute an iterative face generation system that refines prompts until
 1. Clone this repository
 2. Create `config.py` with your Chub.ai tokens:
 ```python
-STAGE_TOKEN = "CHK-851CRFYMIROX4EDBOGN0MF6G4IBQZWESQM32SCGN6843701"
-NORMAL_TOKEN = "CHK-9S2BT8YTFWZ7OYDJCVC25ARPXNUSO1KOR1J1DXBS6842987"
+STAGE_TOKEN = "YOUR_STAGE_TOKEN_HERE"
+NORMAL_TOKEN = "YOUR_NORMAL_TOKEN_HERE"
 ```
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run: `python src/main.py`

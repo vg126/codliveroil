@@ -4,12 +4,21 @@ from __future__ import annotations
 import csv
 import json
 import os
+import sys
 import time
 from datetime import datetime
 
-from generator import generate_face
-from verifier import verify_match
-from refiner import refine_prompt
+# Add the project root to Python path
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+
+# Import config first
+import config
+
+# Import local modules
+from src.generator import generate_face
+from src.verifier import verify_match
+from src.refiner import refine_prompt
 
 TARGET_DESCRIPTION = (
     "Professional man with sharp jawline, bright blue eyes, short brown hair,"
@@ -19,8 +28,8 @@ INITIAL_PROMPT = (
     "photorealistic portrait of a professional man with sharp angular jawline,"
     " bright blue eyes, short brown hair, subtle smile, clean shaven face, studio lighting"
 )
-THRESHOLD = 0.85
-MAX_ITERATIONS = 10
+THRESHOLD = config.CONVERGENCE_THRESHOLD
+MAX_ITERATIONS = config.MAX_ITERATIONS
 
 
 def main() -> None:

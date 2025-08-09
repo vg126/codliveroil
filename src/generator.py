@@ -4,15 +4,18 @@ import sys
 import time
 import requests
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# Add the project root to Python path for config import
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+
 import config
 
 BASE_URL = config.BASE_URL
 HEADERS = {"Authorization": f"Bearer {config.STAGE_TOKEN}"}
 
-POLLING_INTERVAL = 10
+POLLING_INTERVAL = config.POLLING_INTERVAL
 MAX_POLL_ATTEMPTS = 60
-REQUEST_TIMEOUT = 30
+REQUEST_TIMEOUT = config.REQUEST_TIMEOUT
 
 
 def generate_face(prompt: str, reference_url: str | None = None) -> str | None:

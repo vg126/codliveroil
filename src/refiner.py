@@ -4,13 +4,16 @@ import sys
 import json
 import requests
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# Add the project root to Python path for config import
+project_root = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+
 import config
 
 BASE_URL = config.BASE_URL
-HEADERS = {"Authorization": f"Bearer {config.STAGE_TOKEN}"}
+HEADERS = {"Authorization": f"Bearer {config.NORMAL_TOKEN}"}
 
-REQUEST_TIMEOUT = 30
+REQUEST_TIMEOUT = config.REQUEST_TIMEOUT
 
 
 def refine_prompt(current_prompt: str, errors: dict) -> str:
