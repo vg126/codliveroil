@@ -35,7 +35,15 @@ Three-module system with iterative refinement:
 - **Text Completions**: See `Chub Open AI Spec completions.md`
 - **Base URL**: `https://api.chub.ai`
 
-## 🎯 Target Face for Testing
-"Professional man with sharp jawline, bright blue eyes, short brown hair, slight smile, clean shaven"
+## 🎯 SYSTEM SCOPE - TEXT-TO-IMAGE REFINEMENT
 
-Initial prompt: "photorealistic portrait of a professional man with sharp angular jawline, bright blue eyes, short brown hair, subtle smile, clean shaven face, studio lighting"
+**What This System Actually Does:**
+- **Input**: Text description of desired face
+- **Process**: Iteratively refine text prompts to match target description
+- **Output**: Generated image that matches text specification
+- **Verification**: AI compares generated image against text description
+
+**Example Target**: "Petite Indian woman with semi-sharp features, expressive dark eyes, long black hair, subtle smile, warm complexion"
+
+**NOT**: Reference image comparison or character consistency across actions
+**IS**: Text-driven face generation with iterative prompt refinement

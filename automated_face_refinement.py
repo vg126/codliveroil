@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-Automated Face Refinement System using curl subprocess calls
-Bypasses Cloudflare by using curl instead of Python requests
+TEXT-TO-IMAGE FACE REFINEMENT SYSTEM
+
+SCOPE: Generate faces from text descriptions with iterative prompt refinement
+- Input: Target text description
+- Process: Generate → Verify against text → Refine prompt → Repeat
+- Output: Image that matches the text specification
+
+NOT FOR: Reference image comparison or character consistency
+FOR: Creating faces from detailed text descriptions
+
+Uses curl subprocess calls to bypass Cloudflare blocks
 """
 import subprocess
 import json
